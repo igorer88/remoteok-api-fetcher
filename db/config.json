@@ -1,0 +1,15 @@
+{
+	"appName": "Remotejob-ok",
+	"development" : {
+		"encoding": "utf-8",
+		"mongo": {
+			"host" : "localhost",
+			"port": 27017,
+			"db" : "remotejob-ok",
+			"user" : "root",
+			"password" : "1234"
+			}
+		},
+  	"test":{
+  }
+}
