@@ -1,4 +1,5 @@
 'use strict';
+
 const mongoose = require('mongoose');
 const config = require('./../db/config.json');
 
@@ -22,5 +23,5 @@ db.once('open', function() {
 });
 
 module.exports = {
-    db: db
+  db
 };
