@@ -21,7 +21,6 @@ db.once('open', function() {
   console.log(`✔ MongoDB Server listening on: http://${cn.host}:${cn.port}` );
 });
 
-
 module.exports = {
     db: db
 };
