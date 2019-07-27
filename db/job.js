@@ -1,6 +1,6 @@
-const db = require('./database').db;
-const mongoose = require('mongoose');
+'use strict';
 
+const mongoose = require('mongoose');
 
 let jobSchema = new mongoose.Schema({
   slug: String,
@@ -15,7 +15,8 @@ let jobSchema = new mongoose.Schema({
   description: String,
   original: Boolean,
   verified: Boolean,
-  url: String
+  url: String,
+  link: String
 });
 
 jobSchema.methods.showInfo = function(){
@@ -33,7 +34,8 @@ jobSchema.methods.showInfo = function(){
       description: ${this.description},
       original: ${this.original},
       veriied: ${this.verified},
-      url: ${this.url}
+      url: ${this.url},
+      link: ${this.link}
       `
     )
   }
@@ -48,6 +50,6 @@ jobSchema.methods.savedStatus = function(){
   }
 }
 
-let Job = db.model('Job', jobSchema);
+const Job = mongoose.model('Job', jobSchema);
 
 module.exports = Job;
