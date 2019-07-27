@@ -1,10 +1,13 @@
 'use strict'
+
 const express = require ('express');
 const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-
+const database = require('./db/database');
+const services = require('./services/jobs');
+const Job = require('./db/job');
 
 const port = process.env.PORT || 5000;
 const env = process.env.NODE_ENV || 'development';
@@ -35,7 +38,7 @@ app.use((req, res, next) => {
 // will print stacktrace
 
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use(function(err, req, res) {
       res.status(err.status || 500);
       /*console.log('Url: ' + req.url);
       console.log('Message: ' + err.message);
@@ -48,17 +51,32 @@ if (app.get('env') === 'development') {
       */
   });
 
-
   app.get('/api/remotejobs', (req, res) => {
-    res.json({
-      message: "Auth not needed."
-    });
+    Job.find({})
+      .then((jobs)=>{
+        res.status = 200;
+        res.json({
+          message: 'Jobs.',
+          data: jobs
+        });
+      })
+      .catch((err)=>{
+        res.status = 404;
+        res.json({
+          message: 'Error.',
+          data: err
+        });
+      });
+
   });
-
-
-
 }
 
 app.listen(port);
 console.log(`✔ Server listening on: http://localhost:${port}` );
-const database = require('./db/database');
+database.db;
+services.getJobs().then(() => {
+  services.getJob({company: 'Falkbuilt'}).then(job => {
+    console.log('From DB:', job);
+  });
+});
+
