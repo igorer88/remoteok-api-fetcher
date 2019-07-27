@@ -1,4 +1,5 @@
 'use strict';
+/* eslint-disable no-unused-vars */
 
 const apiFetch = require('./apiFetch');
 const Job = require('../db/job');
@@ -17,7 +18,8 @@ const setNewJob = (job) => {
     description: job.description,
     original: job.original,
     verified: job.verified,
-    url: job.url
+    url: job.url,
+    link: `http://remoteok.io/l/${job.id}`
   });
 
   return newJob;
@@ -25,26 +27,49 @@ const setNewJob = (job) => {
 
 const getJobs = async () => {
   let res = await apiFetch.get();
-  res.data.forEach(element => {
-    if (!element.legal) {
-      let newJob = setNewJob(element);
-      newJob.save((err, newJob) => {
-        if (err) return console.error(err);
-        // newJob.savedStatus();
-      });
-    }
-  });
+
+  try {
+    res.data.forEach(element => {
+      if (!element.legal) {
+        let newJob = setNewJob(element);
+        newJob.save((err, newJob) => {
+          if (err) return console.error(err);
+          // newJob.savedStatus();
+        });
+      }
+    });
+  } catch(e) {
+    console.error('Check the connection to the server and try again. ;)');
+  }
 }
 
 const getJob = async (search) => {
-  let job = {};
-  if (search.id) {
-    job = Job.find({ id: /^id/ });
-  }
-  if (search.company) {
-    job = Job.find({ company: /^company/ });
-  }
 
+  let job = {};
+
+  if (search.id) {
+    let id = search.id;
+
+    Job.findOne({ id: `${search.id}` }, function (err, res) {
+      if (!err) {
+        job = res;
+        console.log(res);
+      } else {
+        console.error(err);
+      }
+    });
+  } else {
+    if (search.company) {
+      Job.find({ company: `/^${search.company}/` }, function (err, res) {
+        if (!err) {
+          job = res;
+          console.log(res);
+        } else {
+          console.error(err);
+        }
+      });
+    }
+  }
   return job;
 }
 
