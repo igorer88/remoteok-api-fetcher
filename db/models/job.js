@@ -3,8 +3,15 @@
 const mongoose = require('mongoose');
 
 let jobSchema = new mongoose.Schema({
-  slug: String,
-  id: String,
+  slug: {
+    type: String,
+    unique: true
+  },
+  id: {
+    type: String,
+    index: true,
+    unique: true
+  },
   epoch: String,
   date: String,
   company: String,
@@ -15,8 +22,14 @@ let jobSchema = new mongoose.Schema({
   description: String,
   original: Boolean,
   verified: Boolean,
-  url: String,
-  link: String
+  url: {
+    type: String,
+    unique: true
+  },
+  link: {
+    type: String,
+    unique: true
+  }
 });
 
 jobSchema.methods.showInfo = function(){
