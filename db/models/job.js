@@ -8,7 +8,7 @@ let jobSchema = new mongoose.Schema({
     unique: true
   },
   id: {
-    type: String,
+    type: Number,
     index: true,
     unique: true
   },
