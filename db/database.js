@@ -13,13 +13,13 @@ var cn = {
     application_name: config.appName
 };
 
-mongoose.connect(`mongodb://${cn.host}/${cn.database}`, {useNewUrlParser: true});
+mongoose.connect(`mongodb://${cn.host}/${cn.database}`, {useNewUrlParser: true, useCreateIndex: true });
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   // we're connected!
-  console.log(`✔ MongoDB Server listening on: http://${cn.host}:${cn.port}` );
+  console.log(`✔ MongoDB Server listening on: http://${cn.host}:${cn.port}`);
 });
 
 module.exports = {
