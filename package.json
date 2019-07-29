@@ -1,7 +1,11 @@
 {
   "name": "remoteok-api",
   "version": "0.1.0",
+  "repository": "https://github.com/igorer88/remoteok-api",
+  "private": false,
   "description": "Basic remote ok API fetcher in NodeJs",
+  "author": "igorer88@gmail.com",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -15,8 +19,6 @@
     "mongodb",
     "remoteok"
   ],
-  "author": "igorer88@gmail.com",
-  "license": "MIT",
   "dependencies": {
     "axios": "^0.19.0",
     "body-parser": "^1.17.2",
