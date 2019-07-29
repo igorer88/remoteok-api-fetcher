@@ -77,14 +77,14 @@ app.listen(port);
 console.log(`✔ Server listening on: http://localhost:${port}`);
 try {
   database.db;                                       // Initialize the DB connection for testing
-  console.log(`✔ A list of jobs from the local DB can be found at: http://localhost:${port}/api/remotejobs`);
+  console.log(`✔ A list of jobs from MongoDB can be found at: http://localhost:${port}/api/remotejobs`);
 } catch (e) {
   console.error('There has been an error with the MongoDB server.');
 }
 
 services.getJobs().then(() => {     // Fetches data from the remoteok.io/api
   services.getJob({company: 'Ascendle'}).then(res => {  // Fetches data from the MongoDB database
-    console.log('From local DB:', res);
+    console.log('From MongoDB:', res);
   });
 });
 
