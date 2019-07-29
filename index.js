@@ -25,11 +25,33 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Returns the middleware that parses http requests log.
 app.use(morgan('dev'));
 
+app.get('/api/remotejobs', (req, res) => {
+  Job.find({})
+    .then((jobs) => {
+      console.log('Served /api/remotejobs call');
+      console.log(`Fetched ${jobs.length} jobs from the MongoDB.`);
+      res.status(200);
+      res.json({
+        status: 'success',
+        message: 'Jobs',
+        total: jobs.length,
+        data: jobs
+      });
+    })
+    .catch((err)=>{
+      res.status(400);
+      res.json({
+        message: 'Error.',
+        data: err
+      });
+    });
+});
+
 // error handlers
 
 /// catch 404 and forward to error handler
 app.use((req, res, next) => {
-  var err = new Error('Not Found');
+  let err = new Error('Resource Not Found');
   err.status = 404;
   next(err);
 });
@@ -38,44 +60,30 @@ app.use((req, res, next) => {
 // will print stacktrace
 
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res) {
+  app.use(function(req, res, err) {
       res.status(err.status || 500);
-      /*console.log('Url: ' + req.url);
-      console.log('Message: ' + err.message);
-      console.log('Status: ' + err.status);
+      console.error('Url: ' + req.url);
+      console.error('Message: ' + err.message);
+      console.error('Status: ' + err.status);
       res.json({
           message: err.message,
           error: err,
           title: 'error'
       });
-      */
-  });
-
-  app.get('/api/remotejobs', (req, res) => {
-    Job.find({})
-      .then((jobs)=>{
-        res.status = 200;
-        res.json({
-          message: 'Jobs.',
-          data: jobs
-        });
-      })
-      .catch((err)=>{
-        res.status = 404;
-        res.json({
-          message: 'Error.',
-          data: err
-        });
-      });
-
   });
 }
 
 app.listen(port);
 console.log(`✔ Server listening on: http://localhost:${port}`);
-database.db;
-services.getJobs().then(() => {
-  services.getJob({company: 'Ascendle'}).then(res => {
+try {
+  database.db;                                       // Initialize the DB connection for testing
+  console.log(`✔ A list of jobs from the local DB can be found at: http://localhost:${port}/api/remotejobs`);
+} catch (e) {
+  console.error('There has been an error with the MongoDB server.');
+}
+
+services.getJobs().then(() => {     // Fetches data from the remoteok.io/api
+  services.getJob({company: 'Ascendle'}).then(res => {  // Fetches data from the MongoDB database
     console.log('From local DB:', res);
   });
 });
