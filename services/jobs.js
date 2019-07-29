@@ -26,9 +26,8 @@ const setNewJob = (job) => {
 }
 
 const getJobs = async () => {
-  let res = await apiFetch.get();
-
   try {
+    let res = await apiFetch.get();
     res.data.forEach(element => {
       if (!element.legal) {
         let newJob = setNewJob(element);
@@ -36,12 +35,13 @@ const getJobs = async () => {
           if (err) {
             if (!err.code === 11000) return console.error(err); // Disable duplicate key error.
           }
-          // newJob.savedStatus();
+          // newJob.savedStatus();     // Uncomment if you want to see a status from each record saved.
         });
       }
     });
+    console.log(`Fetched ${res.data.length - 1} jobs from the API.`);
   } catch(e) {
-    console.error('Check the connection to the server and try again. ;)');
+    console.error('Nothing fetched from the API.'); // Could not performed the API request so nothing to show.
   }
 }
 
