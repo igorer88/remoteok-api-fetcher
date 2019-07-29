@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 
 const apiFetch = require('./apiFetch');
-const Job = require('../db/job');
+const Job = require('../db/models/job');
 
 const setNewJob = (job) => {
   let newJob = new Job({
@@ -33,7 +33,9 @@ const getJobs = async () => {
       if (!element.legal) {
         let newJob = setNewJob(element);
         newJob.save((err, newJob) => {
-          if (err) return console.error(err);
+          if (err) {
+            if (!err.code === 11000) return console.error(err); // Disable duplicate key error.
+          }
           // newJob.savedStatus();
         });
       }
@@ -44,33 +46,23 @@ const getJobs = async () => {
 }
 
 const getJob = async (search) => {
-
-  let job = {};
+  let res = {};
 
   if (search.id) {
-    let id = search.id;
-
-    Job.findOne({ id: `${search.id}` }, function (err, res) {
-      if (!err) {
-        job = res;
-        console.log(res);
-      } else {
-        console.error(err);
-      }
+    res = Job.findOne({ 'id': `${search.id}` }, function (err, job) {
+      if (err) return console.error(err);
+      return job;
     });
+
   } else {
     if (search.company) {
-      Job.find({ company: `/^${search.company}/` }, function (err, res) {
-        if (!err) {
-          job = res;
-          console.log(res);
-        } else {
-          console.error(err);
-        }
+      res = Job.find({ 'company': `${search.company}` }, 'id company position', function (err, job) {
+        if (err) console.error(err);
+        return job;
       });
     }
   }
-  return job;
+  return res;
 }
 
 module.exports = {
