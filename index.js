@@ -7,7 +7,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const database = require('./db/database');
 const services = require('./services/jobs');
-const Job = require('./db/job');
+const Job = require('./db/models/job');
 
 const port = process.env.PORT || 5000;
 const env = process.env.NODE_ENV || 'development';
@@ -72,11 +72,11 @@ if (app.get('env') === 'development') {
 }
 
 app.listen(port);
-console.log(`✔ Server listening on: http://localhost:${port}` );
+console.log(`✔ Server listening on: http://localhost:${port}`);
 database.db;
 services.getJobs().then(() => {
-  services.getJob({company: 'Falkbuilt'}).then(job => {
-    console.log('From DB:', job);
+  services.getJob({company: 'Ascendle'}).then(res => {
+    console.log('From local DB:', res);
   });
 });
 
